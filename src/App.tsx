@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import "./App.css";
+import { ICell } from "./types";
+import { createCellsArray } from "./utils";
+import { Field } from "./components/Field";
 
 function App() {
+  const [cells, setCells] = useState<ICell[][]>([]);
+  const [player, setPlayer] = useState(false);
+
+  useEffect(() => {
+    restart();
+  }, []);
+
+  function restart() {
+    let newCells = createCellsArray();
+    setCells(newCells);
+  }
+
+  function onClickHandler(cell: ICell) {
+    let newCells = cells.map((row) => {
+      row.forEach((c) => {
+        if (c.id === cell.id) {
+          c.sign = c.sign === null ? (player ? "◯" : "✖") : c.sign;
+        }
+      });
+      return row;
+    });
+    setCells(newCells);
+    setPlayer((p) => !p);
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Field onClickHandler={onClickHandler} cells={cells} />
     </div>
   );
 }
