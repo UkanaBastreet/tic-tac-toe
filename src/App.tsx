@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { ICell } from "./types";
-import { createCellsArray } from "./utils";
+import {
+  checkDiagonal,
+  checkHorizontal,
+  checkVertical,
+  createCellsArray,
+} from "./utils";
 import { Field } from "./components/Field";
 
 function App() {
@@ -11,6 +16,16 @@ function App() {
   useEffect(() => {
     restart();
   }, []);
+
+  useEffect(() => {
+    if (
+      checkHorizontal(cells) ||
+      checkVertical(cells) ||
+      checkDiagonal(cells)
+    ) {
+      restart();
+    }
+  }, [cells]);
 
   function restart() {
     let newCells = createCellsArray();
